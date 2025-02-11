@@ -1,7 +1,6 @@
 package org.example;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+
 
 public class Main {
     public static void main(String[] args) {
@@ -28,16 +27,47 @@ public class Main {
 
     public static String readTextFromFile(String filePath) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(filePath));
-        StringBuilder content = new StringBuilder();
+        BufferedWriter integerWriter = new BufferedWriter(new FileWriter("integer.txt"));
+        BufferedWriter floatWriter = new BufferedWriter(new FileWriter("float.txt"));
+        BufferedWriter stringWriter = new BufferedWriter(new FileWriter("string.txt"));
         String line;
         while ((line = reader.readLine()) != null) {
-            content.append(line).append("\n"); // Добавляем каждую строку в StringBuilder
+            String type = determineType(line);
+            switch (type) {
+                case "целое число":
+                    integerWriter.write(line);
+                    integerWriter.newLine();
+                    break;
+                case "вещественное число":
+                    floatWriter.write(line);
+                    floatWriter.newLine();
+                    break;
+                case "строка":
+                    stringWriter.write(line);
+                    stringWriter.newLine();
+                    break;
+            }
         }
 
-        // Закрываем поток
+        // Закрываем потоки
         reader.close();
-        return content.toString();
+        integerWriter.close();
+        floatWriter.close();
+        stringWriter.close();
+        return "111";
 
 
     }
+
+
+    public static String determineType(String str) {
+        if (str.matches("-?\\d+")) {
+            return "целое число";
+        } else if (str.matches("-?\\d+(\\.\\d+)?")) {
+            return "вещественное число";
+        } else {
+            return "строка";
+        }
+    }
+
 }
