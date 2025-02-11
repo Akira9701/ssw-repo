@@ -12,11 +12,22 @@ public class Main {
         String currentDirectory = System.getProperty("user.dir");
         System.out.println("Текущая директория: " + currentDirectory);
 
+
+        String prefix = ""; // По умолчанию префикс пустой
+
+        for (int i = 1; i < args.length; i++) {
+            if (args[i].equals("-p") && i + 1 < args.length) {
+                prefix = args[i + 1]; // Извлекаем префикс
+                break;
+            }
+        }
+
+
         String filePath = args[1];
         System.out.println("Использование:" + filePath);
 
         try {
-            String content = readTextFromFile(filePath);
+            String content = readTextFromFile(filePath, prefix);
             System.out.println("Содержимое файла:");
             System.out.println(content);
         } catch (IOException e) {
@@ -25,11 +36,15 @@ public class Main {
     }
 
 
-    public static String readTextFromFile(String filePath) throws IOException {
+    public static String readTextFromFile(String filePath, String prefix) throws IOException {
+        String integerFile = prefix + "integer.txt";
+        String floatFile = prefix + "float.txt";
+        String stringFile = prefix + "string.txt";
+
         BufferedReader reader = new BufferedReader(new FileReader(filePath));
-        BufferedWriter integerWriter = new BufferedWriter(new FileWriter("integer.txt"));
-        BufferedWriter floatWriter = new BufferedWriter(new FileWriter("float.txt"));
-        BufferedWriter stringWriter = new BufferedWriter(new FileWriter("string.txt"));
+        BufferedWriter integerWriter = new BufferedWriter(new FileWriter(integerFile));
+        BufferedWriter floatWriter = new BufferedWriter(new FileWriter(floatFile));
+        BufferedWriter stringWriter = new BufferedWriter(new FileWriter(stringFile));
         String line;
         while ((line = reader.readLine()) != null) {
             String type = determineType(line);
